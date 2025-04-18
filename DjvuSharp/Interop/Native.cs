@@ -24,11 +24,11 @@ using System.Runtime.CompilerServices;
 using DjvuSharp.Enums;
 using DjvuSharp.Marshaler;
 using DjvuSharp.Rendering;
+using System.IO;
 
 [assembly: InternalsVisibleTo("DjvuSharp.Tests")]
 namespace DjvuSharp.Interop
 {
-
     /// <summary>
     /// This structure is a member of the union djvu_message.
     /// It represents the information common to all kinds of
@@ -247,7 +247,40 @@ namespace DjvuSharp.Interop
 
     internal static class Native
     {
-        private const string dllname = "djvulibre-21";
+        private const string dllname = "libdjvulibre.dll";
+
+        static Native()
+        {
+            // Load the platform dependent libdjvulibre.dll if it exists.
+            if (!TryLoadNativeLibrary(AppDomain.CurrentDomain.RelativeSearchPath))
+                TryLoadNativeLibrary(Path.GetDirectoryName(typeof(Native).Assembly.Location));
+        }
+
+        private static bool TryLoadNativeLibrary(string path)
+        {
+            if (path == null)
+                return false;
+
+            string arch = Environment.Is64BitProcess ? "x64" : "x86";
+
+            path = Path.Combine(path, arch);
+            string libPath = Path.Combine(path, dllname);
+
+            SetDllDirectory(path);
+            bool result = LoadLibrary(libPath) != IntPtr.Zero;
+            if (!result)
+            {
+                Console.WriteLine("Failed to load library: {dllname}, lastError: {Marshal.GetLastWin32Error()}");
+            }
+            SetDllDirectory(null);
+            return result;
+        }
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool SetDllDirectory(string lpPathName);
+
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        private static extern IntPtr LoadLibrary(string lpFileName);
 
         // #if X86
         [DllImport(dllname, CallingConvention = CallingConvention.Cdecl)]

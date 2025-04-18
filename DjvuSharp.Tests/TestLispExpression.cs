@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DjvuSharp.LispExpressions;
+﻿using DjvuSharp.LispExpressions;
 using NUnit.Framework;
 
 namespace DjvuSharp.Tests

@@ -1,20 +1,23 @@
 # DjvuSharp : .NET bindings for DjvuLibre library
 
-**DjvuSharp** is a set of .NET bindings for DjvuLibre library and targets .NET standard 2.0
+**DjvuSharp** is a fork of v8ify/DjvuSharp. It is a set of .NET bindings for DjvuLibre library and it targets .NET Framework 4.8
 
 It is useful to decode .djvu files and it can render a djvu page to raw pixel data. It also has features
 to access and decode other djvu file metadata.
 
 ## Getting Started
 
-The DjvuSharp library targets .NET Standard 2.0, thus it can be used in projects that target .NET Standard 2.0+, .NET Core 2.0+, .NET 5.0+ and possibly others. DjvuSharp includes a pre-compiled native library, which currently supports the following platforms:
+This DjvuSharp library fork targets .NET Framework 4.8. DjvuSharp includes a pre-compiled native libraries for:
 
-- win-64
-- linux-64
+- Windows x86
+- windows x64
 
-Support for other platforms is planned.
+**Note**: 
+The included libraries are built from majkimester/DjVuLibre repo, and they are statically linked with Visual C++ platform libraries. 
+Installing of the [Microsoft Visual C++ Redistributable for Visual Studio 2015, 2017, 2019 and 2022](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170) is not required.
 
-**Note**: you should make sure that end users on Windows install the [Microsoft Visual C++ Redistributable for Visual Studio 2015, 2017, 2019 and 2022](https://docsmicrosoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-160#visual-studio-2015-2017-2019-and-2022) for their platform, otherwise they will get an error message stating that `djvulibre-21.dll` could not be loaded because a module was not found.
+If you have issues with statically linked platform libraries you can build and replace `libdjvulibre.dll` and `libjpeg.dll` with dinamically linked platform dlls. 
+In this case the Redistributable needs to be installed, otherwise they will get an error message stating that `libdjvulibre.dll` could not be loaded because a module was not found.
 
 ## Usage
 
@@ -44,4 +47,4 @@ The `DjvuPage` is the most important object, as it has most of the useful attrib
 
 ## License
 
-DjvuSharp is released under GPL V2. Check the [LICENSE](https://github.com/Prajwal-Jadhav/DjvuSharp/blob/master/LICENSE) file for more details.
+DjvuSharp is released under GPL V2. Check the [LICENSE](https://github.com/majkimester/DjvuSharp/blob/master/LICENSE) file for more details.

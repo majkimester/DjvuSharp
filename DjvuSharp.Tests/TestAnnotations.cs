@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace DjvuSharp.Tests
 {
@@ -14,7 +9,7 @@ namespace DjvuSharp.Tests
         [OneTimeSetUp]
         public void SetUp()
         {
-            DjvuDocument document = DjvuDocument.Create(@"./assets/DjVu3Spec.djvu");
+            DjvuDocument document = DjvuDocument.Create(@"../../../assets/DjVu3Spec.djvu");
 
             _annotation = new DjvuPage(document, 5).GetAnnotations();
         }

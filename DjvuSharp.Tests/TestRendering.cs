@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
-using DjvuSharp.Rendering;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
+﻿using NUnit.Framework;
+
 
 namespace DjvuSharp.Tests
 {
@@ -26,8 +18,8 @@ namespace DjvuSharp.Tests
         [OneTimeSetUp]
         public void Setup()
         {
-            boyAndChicken = DjvuDocument.Create("./assets/boy_and_chicken.djvu");
-            djvuSpec = DjvuDocument.Create("./assets/DjVu3Spec.djvu");
+            boyAndChicken = DjvuDocument.Create("../../../assets/boy_and_chicken.djvu");
+            djvuSpec = DjvuDocument.Create("../../../assets/DjVu3Spec.djvu");
 
             boyAndChickenPage_0 = new DjvuPage(boyAndChicken, 0);
             boyAndChickenPage_1 = new DjvuPage(boyAndChicken, 1);
