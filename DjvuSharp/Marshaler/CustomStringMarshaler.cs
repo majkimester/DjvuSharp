@@ -18,7 +18,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using DjvuSharp.Interop;
@@ -41,12 +40,12 @@ namespace DjvuSharp.Marshaler
 
             // not null terminated
             byte[] strbuf = Encoding.UTF8.GetBytes((string)managedObj);
-            IntPtr buffer = Native.ddjvu_alloc((uint)(strbuf.Length + 1));
+            IntPtr buffer = Native.ddjvu_alloc((UIntPtr)(strbuf.Length + 1));
 
             Marshal.Copy(strbuf, 0, buffer, strbuf.Length);
 
-            // write the terminating null
-            Marshal.WriteByte(buffer + strbuf.Length, 0);
+            // Add null terminator manually
+            Marshal.WriteByte(buffer, strbuf.Length, 0);
             return buffer;
         }
 

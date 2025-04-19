@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using DjvuSharp.Interop;
 using DjvuSharp.Marshaler;
 using System.Runtime.InteropServices;
@@ -113,32 +112,36 @@ namespace DjvuSharp
             }
         }
 
+        /// <summary>
+        /// Get Metadata.
+        /// </summary>
         public Dictionary<string, string> Metadata
         {
             get
             {
                 Dictionary<string, string> metadata = new Dictionary<string, string>();
 
-                unsafe
+                IntPtr metadataKeysPtr = Native.ddjvu_anno_get_metadata_keys(_annotation);
+                if (metadataKeysPtr == IntPtr.Zero) return metadata;
+
+                List<IntPtr> metadataKeys = new List<IntPtr>();
+                for (int i = 0; ;i++)
                 {
-                    void** ptr = Native.ddjvu_anno_get_metadata_keys(_annotation);
-
-                    while ((int)*ptr != 0)
-                    {
-                        IntPtr strPtr = Native.ddjvu_anno_get_metadata(ptr);
-                        IntPtr keyPtr = new IntPtr(*ptr);
-
-                        string value = _stringMarshaler.MarshalNativeToManaged(strPtr) as string;
-
-                        string key = _stringMarshaler.MarshalNativeToManaged(Native.miniexp_to_name(keyPtr)) as string;
-
-                        metadata.Add(key, value);
-
-                        ptr++;
-                    }
-
-                    return metadata;
+                    IntPtr key = Marshal.ReadIntPtr(metadataKeysPtr, i * IntPtr.Size);
+                    if (key == IntPtr.Zero) break;
+                    metadataKeys.Add(key);
                 }
+
+                foreach (var keyPtr in metadataKeys)
+                {
+                    IntPtr strPtr = Native.ddjvu_anno_get_metadata(_annotation, keyPtr);
+                    string value = _stringMarshaler.MarshalNativeToManaged(strPtr) as string;
+                    string key = _stringMarshaler.MarshalNativeToManaged(Native.miniexp_to_name(keyPtr)) as string;
+                    metadata.Add(key, value);
+                }
+
+                Native.ddjvu_free(metadataKeysPtr);
+                return metadata;
             }
         }
     }

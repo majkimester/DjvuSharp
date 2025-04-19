@@ -276,23 +276,23 @@ namespace DjvuSharp.Interop
             return result;
         }
 
+        // Kernel 32
+
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool SetDllDirectory(string lpPathName);
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         private static extern IntPtr LoadLibrary(string lpFileName);
 
-        // #if X86
+        // Custom addons
+
         [DllImport(dllname, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static IntPtr ddjvu_alloc(uint size);
-        /*// 
-                [DllImport(dllname, CallingConvention = CallingConvention.Cdecl)]
-                internal extern static IntPtr djvu_alloc(ulong size);
-        #endif*/
+        internal extern static IntPtr ddjvu_alloc(UIntPtr size);
 
         [DllImport(dllname, CallingConvention = CallingConvention.Cdecl)]
         internal extern static void ddjvu_free(IntPtr miniexpointer);
 
+        // DjVuLibre methods
 
         [DllImport(dllname, CallingConvention = CallingConvention.Cdecl)]
         internal extern static IntPtr ddjvu_get_version_string();
@@ -307,12 +307,7 @@ namespace DjvuSharp.Interop
         internal extern static void ddjvu_cache_set_size(IntPtr context, ulong cachesize);
 
         [DllImport(dllname, CallingConvention = CallingConvention.Cdecl)]
-
-#if X86
-        internal extern static uint ddjvu_cache_get_size(IntPtr context);
-#else
-        internal extern static ulong ddjvu_cache_get_size(IntPtr context);
-#endif
+        internal extern static UIntPtr ddjvu_cache_get_size(IntPtr context);
 
         [DllImport(dllname, CallingConvention = CallingConvention.Cdecl)]
         internal extern static void ddjvu_cache_clear(IntPtr context);
@@ -1081,7 +1076,7 @@ namespace DjvuSharp.Interop
         /// <param name="annotations"></param>
         /// <returns></returns>
         [DllImport(dllname, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern unsafe void** ddjvu_anno_get_metadata_keys(IntPtr annotations);
+        internal static extern IntPtr ddjvu_anno_get_metadata_keys(IntPtr annotations);
 
         /// <summary>
         /// Parse the annotations and returns the metadata string
@@ -1093,7 +1088,7 @@ namespace DjvuSharp.Interop
         /// <param name="annotations"></param>
         /// <returns></returns>
         [DllImport(dllname, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern unsafe IntPtr ddjvu_anno_get_metadata(void** annotations);
+        internal static extern IntPtr ddjvu_anno_get_metadata(IntPtr annotations, IntPtr key);
 
         /// <summary>
         /// Returns the length of a list.
