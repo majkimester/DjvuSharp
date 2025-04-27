@@ -49,21 +49,23 @@ namespace DjvuSharp.Marshaler
             return buffer;
         }
 
-        public unsafe object MarshalNativeToManaged(IntPtr pNativeData)
+        public object MarshalNativeToManaged(IntPtr pNativeData)
         {
-            byte* walk = (byte*)pNativeData;
+            if (pNativeData == IntPtr.Zero)
+                return null;
 
-            // find the end of the string
-            while (*walk != 0)
-            {
-                walk++;
-            }
-            int length = (int)(walk - (byte*)pNativeData);
+            // Find null-terminated length
+            int length = 0;
+            while (Marshal.ReadByte(pNativeData, length) != 0) length++;
 
-            // should not be null terminated
+            if (length == 0) 
+                return string.Empty;
+
+            // Copy the bytes (excluding the null terminator)
             byte[] strbuf = new byte[length];
-            // skip the trailing null
-            Marshal.Copy((IntPtr)pNativeData, strbuf, 0, length);
+            Marshal.Copy(pNativeData, strbuf, 0, length);
+
+            // Decode UTF-8
             string data = Encoding.UTF8.GetString(strbuf);
             return data;
         }

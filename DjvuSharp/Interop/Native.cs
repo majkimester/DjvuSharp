@@ -615,7 +615,7 @@ namespace DjvuSharp.Interop
         /// <param name="output"></param>
         /// <returns></returns>
         [DllImport(dllname, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern IntPtr ddjvu_rectmapper_create(Rectangle input, Rectangle output);
+        internal static extern IntPtr ddjvu_rectmapper_create(ref Rectangle input, ref Rectangle output);
 
 
         /// <summary>
@@ -656,7 +656,7 @@ namespace DjvuSharp.Interop
         /// <param name="mapper"></param>
         /// <param name="rect"></param>
         [DllImport(dllname, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern unsafe void ddjvu_map_rect(IntPtr mapper, Rectangle rect);
+        internal static extern void ddjvu_map_rect(IntPtr mapper, ref Rectangle rect);
 
         /// <summary>
         /// Applies the inverse coordinate transform to a point
@@ -674,7 +674,7 @@ namespace DjvuSharp.Interop
         /// <param name="x"></param>
         /// <param name="y"></param>
         [DllImport(dllname, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void ddjvu_unmap_rect(IntPtr mapper, Rectangle rect);
+        internal static extern void ddjvu_unmap_rect(IntPtr mapper, ref Rectangle rect);
 
 
         /* -------------------------------------------------- */
@@ -861,8 +861,8 @@ namespace DjvuSharp.Interop
         internal static extern int ddjvu_page_render(
             IntPtr page,
             RenderMode mode,
-            Rectangle pagerect,
-            Rectangle renderrect,
+            ref Rectangle pagerect,
+            ref Rectangle renderrect,
             IntPtr pixelformat,
             uint rowsize,
             IntPtr imagebuffer);
@@ -1011,21 +1011,27 @@ namespace DjvuSharp.Interop
         /// the hidden text data as finely as possible.
         /// </summary>
         /// <param name="document"></param>
+        /// <param name="pageNo"></param>
+        /// <param name="maxDetails"></param>
         /// <returns></returns>
         [DllImport(dllname, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern IntPtr ddjvu_document_get_pagetext(IntPtr document);
+        internal static extern IntPtr ddjvu_document_get_pagetext(IntPtr document, int pageNo, 
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(CustomStringMarshaler))] string maxDetails);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="document"></param>
         /// <returns></returns>
+        /// 
+        /*
         [DllImport(dllname, CallingConvention = CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(CustomStringMarshaler))]
         internal static extern string ddjvu_document_get_pagetext_utf8(
             IntPtr document,
             int pageNo,
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(CustomStringMarshaler))] string maxDetails);
+        */
 
         /// <summary>
         /// This function tries to obtain the annotations for

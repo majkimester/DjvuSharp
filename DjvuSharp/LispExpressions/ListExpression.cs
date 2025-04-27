@@ -18,8 +18,6 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DjvuSharp.Interop;
 
 namespace DjvuSharp.LispExpressions
@@ -39,9 +37,16 @@ namespace DjvuSharp.LispExpressions
             _expression = ptr;
         }
 
-        public ListExpression(IntPtr expression, IntPtr document): base(expression)
+        public ListExpression(Expression expression)
         {
+            if (!expression.IsListExpression)
+            {
+                throw new ArgumentException(
+                    $"The parameter {nameof(expression)} doesn't point to a list lisp-expression.",
+                    nameof(expression));
+            }
 
+            _expression = expression._expression;
         }
 
         public Expression GetNthElement(int n)

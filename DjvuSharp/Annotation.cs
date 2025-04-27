@@ -124,16 +124,10 @@ namespace DjvuSharp
                 IntPtr metadataKeysPtr = Native.ddjvu_anno_get_metadata_keys(_annotation);
                 if (metadataKeysPtr == IntPtr.Zero) return metadata;
 
-                List<IntPtr> metadataKeys = new List<IntPtr>();
                 for (int i = 0; ;i++)
                 {
-                    IntPtr key = Marshal.ReadIntPtr(metadataKeysPtr, i * IntPtr.Size);
-                    if (key == IntPtr.Zero) break;
-                    metadataKeys.Add(key);
-                }
-
-                foreach (var keyPtr in metadataKeys)
-                {
+                    IntPtr keyPtr = Marshal.ReadIntPtr(metadataKeysPtr, i * IntPtr.Size);
+                    if (keyPtr == IntPtr.Zero) break;
                     IntPtr strPtr = Native.ddjvu_anno_get_metadata(_annotation, keyPtr);
                     string value = _stringMarshaler.MarshalNativeToManaged(strPtr) as string;
                     string key = _stringMarshaler.MarshalNativeToManaged(Native.miniexp_to_name(keyPtr)) as string;

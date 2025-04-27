@@ -17,11 +17,7 @@
 *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-using DjvuSharp.Enums;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
 using DjvuSharp.Interop;
 
 namespace DjvuSharp.Rendering
@@ -66,7 +62,7 @@ namespace DjvuSharp.Rendering
                 fixed (byte* p = imageBuffer)
                 {
                     IntPtr ptr = (IntPtr)p;
-                    int success = Native.ddjvu_page_render(page.NativePagePtr, mode, pageRect, renderRect, _djvu_format, rowSize, ptr);
+                    int success = Native.ddjvu_page_render(page.NativePagePtr, mode, ref pageRect, ref renderRect, _djvu_format, rowSize, ptr);
 
                     if (success == 0)
                     {

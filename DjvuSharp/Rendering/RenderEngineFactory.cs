@@ -18,10 +18,6 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DjvuSharp.Enums;
-using System.Runtime.InteropServices;
 using DjvuSharp.Interop;
 
 namespace DjvuSharp.Rendering

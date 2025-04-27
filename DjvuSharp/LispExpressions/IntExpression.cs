@@ -18,8 +18,6 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DjvuSharp.LispExpressions
 {
@@ -29,6 +27,18 @@ namespace DjvuSharp.LispExpressions
         {
             IntPtr exp = (IntPtr)((ulong)(integer << 2 | 3));
             _expression = exp;
+        }
+
+        public IntExpression(Expression expression)
+        {
+            if (!expression.IsIntExpression)
+            {
+                throw new ArgumentException(
+                    $"The parameter {nameof(expression)} doesn't point to a int lisp-expression.",
+                    nameof(expression));
+            }
+
+            _expression = expression._expression;
         }
 
         public int Value { get => ((int)_expression.ToInt64()) >> 2 ; }

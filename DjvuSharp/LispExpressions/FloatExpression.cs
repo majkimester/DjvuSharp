@@ -17,10 +17,8 @@
 *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using DjvuSharp.Interop;
+using System;
 
 namespace DjvuSharp.LispExpressions
 {
@@ -29,6 +27,18 @@ namespace DjvuSharp.LispExpressions
         public FloatExpression(double input)
         {
             _expression = Native.miniexp_floatnum(input);
+        }
+
+        public FloatExpression(Expression expression)
+        {
+            if (!expression.IsFloatExpression)
+            {
+                throw new ArgumentException(
+                    $"The parameter {nameof(expression)} doesn't point to a float lisp-expression.",
+                    nameof(expression));
+            }
+
+            _expression = expression._expression;
         }
 
         public double Value { get => Native.miniexp_to_double(_expression); }

@@ -18,8 +18,6 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DjvuSharp.Interop;
 using DjvuSharp.Marshaler;
 using System.Runtime.InteropServices;
@@ -33,6 +31,19 @@ namespace DjvuSharp.LispExpressions
         public StringExpression(string input)
         {
             _expression = Native.miniexp_string(input);
+            _stringMarshaler = CustomStringMarshaler.GetInstance("");
+        }
+
+        public StringExpression(Expression expression)
+        {
+            if (!expression.IsStringExpression)
+            {
+                throw new ArgumentException(
+                    $"The parameter {nameof(expression)} doesn't point to a string lisp-expression.",
+                    nameof(expression));
+            }
+
+            _expression = expression._expression;
             _stringMarshaler = CustomStringMarshaler.GetInstance("");
         }
 

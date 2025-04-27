@@ -25,56 +25,56 @@ namespace DjvuSharp.Tests
         [Test]
         public void Check_Valid_Float_Expression()
         {
-            Assert.IsTrue(_floatExpression.IsFloatExpression());
+            Assert.IsTrue(_floatExpression.IsFloatExpression);
 
-            Assert.IsFalse(_floatExpression.IsIntExpression());
-            Assert.IsFalse(_floatExpression.IsStringExpression());
-            Assert.IsFalse(_floatExpression.IsListExpression());
-            Assert.IsFalse(_floatExpression.IsSymbol());
+            Assert.IsFalse(_floatExpression.IsIntExpression);
+            Assert.IsFalse(_floatExpression.IsStringExpression);
+            Assert.IsFalse(_floatExpression.IsListExpression);
+            Assert.IsFalse(_floatExpression.IsSymbol);
         }
 
         [Test]
         public void Check_Valid_Int_Expression()
         {
-            Assert.IsTrue(_intExpression.IsIntExpression());
+            Assert.IsTrue(_intExpression.IsIntExpression);
 
-            Assert.IsFalse(_intExpression.IsFloatExpression());
-            Assert.IsFalse(_intExpression.IsStringExpression());
-            Assert.IsFalse(_intExpression.IsListExpression());
-            Assert.IsFalse(_intExpression.IsSymbol());
+            Assert.IsFalse(_intExpression.IsFloatExpression);
+            Assert.IsFalse(_intExpression.IsStringExpression);
+            Assert.IsFalse(_intExpression.IsListExpression);
+            Assert.IsFalse(_intExpression.IsSymbol);
         }
 
         [Test]
         public void Check_Valid_List_Expression()
         {
-            Assert.IsTrue(_listExpression.IsListExpression());
+            Assert.IsTrue(_listExpression.IsListExpression);
 
-            Assert.IsFalse(_listExpression.IsIntExpression());
-            Assert.IsFalse(_listExpression.IsFloatExpression());
-            Assert.IsFalse(_listExpression.IsStringExpression());
-            Assert.IsFalse(_listExpression.IsSymbol());
+            Assert.IsFalse(_listExpression.IsIntExpression);
+            Assert.IsFalse(_listExpression.IsFloatExpression);
+            Assert.IsFalse(_listExpression.IsStringExpression);
+            Assert.IsFalse(_listExpression.IsSymbol);
         }
 
         [Test]
         public void Check_Valid_String_Expression()
         {
-            Assert.IsTrue(_stringExpression.IsStringExpression());
+            Assert.IsTrue(_stringExpression.IsStringExpression);
 
-            Assert.IsFalse(_stringExpression.IsIntExpression());
-            Assert.IsFalse(_stringExpression.IsFloatExpression());
-            Assert.IsFalse(_stringExpression.IsListExpression());
-            Assert.IsFalse(_stringExpression.IsSymbol());
+            Assert.IsFalse(_stringExpression.IsIntExpression);
+            Assert.IsFalse(_stringExpression.IsFloatExpression);
+            Assert.IsFalse(_stringExpression.IsListExpression);
+            Assert.IsFalse(_stringExpression.IsSymbol);
         }
 
         [Test]
         public void Check_Valid_Symbol()
         {
-            Assert.IsTrue(_symbol.IsSymbol());
+            Assert.IsTrue(_symbol.IsSymbol);
 
-            Assert.IsFalse(_symbol.IsIntExpression());
-            Assert.IsFalse(_symbol.IsFloatExpression());
-            Assert.IsFalse(_symbol.IsListExpression());
-            Assert.IsFalse(_symbol.IsStringExpression());
+            Assert.IsFalse(_symbol.IsIntExpression);
+            Assert.IsFalse(_symbol.IsFloatExpression);
+            Assert.IsFalse(_symbol.IsListExpression);
+            Assert.IsFalse(_symbol.IsStringExpression);
         }
     }
 }

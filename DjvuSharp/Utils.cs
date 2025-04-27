@@ -286,7 +286,7 @@ namespace DjvuSharp
         {
             Expression expression = new Expression(miniexp);
 
-            if (expression.IsSymbol())
+            if (expression.IsSymbol)
             {
                 string symbolValue = new Symbol(expression).Name;
 

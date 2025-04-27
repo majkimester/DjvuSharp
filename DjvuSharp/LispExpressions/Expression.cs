@@ -18,9 +18,6 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
 using DjvuSharp.Interop;
 
 namespace DjvuSharp.LispExpressions
@@ -55,11 +52,12 @@ namespace DjvuSharp.LispExpressions
         /// Essential when converting to more specific type like pair, IntExpression, etc
         /// </summary>
         /// <returns>True if this expression is symbol; false otherwise</returns>
-        public bool IsSymbol()
+        public bool IsSymbol
         {
-            long i = _expression.ToInt64();
-
-            return (i & 3) == 2;
+            get {
+                long i = _expression.ToInt64();
+                return (i & 3) == 2;
+            }
         }
 
         /// <summary>
@@ -67,11 +65,13 @@ namespace DjvuSharp.LispExpressions
         /// Essential when converting to more specific type like pair, IntExpression, etc
         /// </summary>
         /// <returns>True if this expression is pair; false otherwise</returns>
-        public bool IsListExpression()
+        public bool IsListExpression
         {
-            long i = _expression.ToInt64();
-
-            return (i & 3) == 0;
+            get
+            {
+                long i = _expression.ToInt64();
+                return (i & 3) == 0;
+            }
         }
 
         /// <summary>
@@ -79,11 +79,13 @@ namespace DjvuSharp.LispExpressions
         /// Essential when converting to more specific type like pair, IntExpression, etc
         /// </summary>
         /// <returns>True if this expression is StringExpression; false otherwise</returns>
-        public bool IsStringExpression()
+        public bool IsStringExpression
         {
-            int result = Native.miniexp_stringp(_expression);
-
-            return !(result == 0);
+            get
+            {
+                int result = Native.miniexp_stringp(_expression);
+                return !(result == 0);
+            }
         }
 
         /// <summary>
@@ -91,11 +93,13 @@ namespace DjvuSharp.LispExpressions
         /// Essential when converting to more specific type like pair, IntExpression, etc
         /// </summary>
         /// <returns>True if this expression is FloatExpression; false otherwise</returns>
-        public bool IsFloatExpression()
+        public bool IsFloatExpression
         {
-            int result = Native.miniexp_floatnump(_expression);
-
-            return !(result == 0);
+            get
+            {
+                int result = Native.miniexp_floatnump(_expression);
+                return !(result == 0);
+            }
         }
 
         /// <summary>
@@ -103,11 +107,13 @@ namespace DjvuSharp.LispExpressions
         /// Essential when converting to more specific type like pair, IntExpression, etc
         /// </summary>
         /// <returns>True if this expression is IntExpression; false otherwise</returns>
-        public bool IsIntExpression()
+        public bool IsIntExpression
         {
-            long i = _expression.ToInt64();
-
-            return (i & 3) == 3;
+            get
+            {
+                long i = _expression.ToInt64();
+                return (i & 3) == 3;
+            }
         }
 
         public override bool Equals(object obj)

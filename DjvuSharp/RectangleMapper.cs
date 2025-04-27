@@ -19,8 +19,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DjvuSharp.Interop;
 using DjvuSharp.Enums;
 
@@ -32,7 +30,7 @@ namespace DjvuSharp
 
         public RectangleMapper(Rectangle input, Rectangle output)
         {
-            _rect_mapper = Native.ddjvu_rectmapper_create(input, output);
+            _rect_mapper = Native.ddjvu_rectmapper_create(ref input, ref output);
 
             if (_rect_mapper == IntPtr.Zero)
             {
@@ -52,7 +50,7 @@ namespace DjvuSharp
 
         public void MapRectangle(Rectangle rectangle)
         {
-            Native.ddjvu_map_rect(_rect_mapper, rectangle);
+            Native.ddjvu_map_rect(_rect_mapper, ref rectangle);
         }
 
         public void UnmapPoint(ref int x, ref int y)
@@ -62,7 +60,7 @@ namespace DjvuSharp
 
         public void UnmapRectangle(Rectangle rectangle)
         {
-            Native.ddjvu_unmap_rect(_rect_mapper, rectangle);
+            Native.ddjvu_unmap_rect(_rect_mapper, ref rectangle);
         }
 
         ~RectangleMapper()

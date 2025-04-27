@@ -18,8 +18,6 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DjvuSharp.Interop;
 using DjvuSharp.Marshaler;
 
@@ -44,7 +42,7 @@ namespace DjvuSharp.LispExpressions
 
         public Symbol(Expression expression)
         {
-            if(!expression.IsSymbol())
+            if(!expression.IsSymbol)
             {
                 throw new ArgumentException(
                     $"The parameter {nameof(expression)} doesn't point to a symbol lisp-expression.",

@@ -18,12 +18,11 @@
 */
 
 using System; // IDisposable
+using System.Diagnostics;
+using System.Text;
 using DjvuSharp.Enums; // PageStatus
-using DjvuSharp.Rendering;
-using System.Linq;
-using System.IO;
-using System.Drawing;
 using DjvuSharp.Interop;
+using DjvuSharp.LispExpressions;
 
 namespace DjvuSharp
 {
@@ -191,6 +190,47 @@ namespace DjvuSharp
             get { return Native.ddjvu_page_get_initial_rotation(_djvu_page); }
         }
 
+        /// <summary>
+        /// Get full text of a page.
+        /// </summary>
+        /// <returns></returns>
+        public string GetPageFullText()
+        {
+            string pageText = null;
+            string maxDetails = "page";
+            IntPtr expPtr = Native.ddjvu_document_get_pagetext(Document.Document, PageNumber, maxDetails);
+
+            while (Utils.IsMiniexpDummy(expPtr))
+            {
+                // Todo - implement an error handling strategy for ProcessMessages
+                Utils.ProcessMessages(Document.Context, true);
+
+                expPtr = Native.ddjvu_document_get_pagetext(Document.Document, PageNumber, maxDetails);
+            }
+
+            if (Utils.IsMiniexpNil(expPtr))
+            {
+                return pageText;
+            }
+
+            var ex = new Expression(expPtr);
+            if (ex.IsListExpression)
+            {
+                // { page, 373, 150, 2190, 3119, "Page text"}
+                ListExpression listExp = new ListExpression(ex);
+                if (listExp.Length == 6)
+                {
+                    Expression expPageText = listExp.GetNthElement(5);
+                    if (expPageText.IsStringExpression)
+                    {
+                        var expPageTextStr = new StringExpression(expPageText);
+                        pageText = expPageTextStr.Value;
+                    }
+                }
+            }
+            return pageText;
+        }
+
         public string GetPageText(PageTextDetails details)
         {
             string maxDetails = "page";
@@ -217,9 +257,123 @@ namespace DjvuSharp
                     break;
             }
 
-            return Native.ddjvu_document_get_pagetext_utf8(Document.Document, PageNumber, maxDetails);
+            IntPtr expPtr = Native.ddjvu_document_get_pagetext(Document.Document, PageNumber, maxDetails);
+
+            while (Utils.IsMiniexpDummy(expPtr))
+            {
+                // Todo - implement an error handling strategy for ProcessMessages
+                Utils.ProcessMessages(Document.Context, true);
+
+                expPtr = Native.ddjvu_document_get_pagetext(Document.Document, PageNumber, maxDetails);
+            }
+
+            if (Utils.IsMiniexpNil(expPtr))
+            {
+                return null;
+            }
+
+            var ex = new Expression(expPtr);
+
+            var sb = new StringBuilder();
+            DebugDump(sb, ex, 0);
+            Debug.WriteLine(sb);
+
+            if (ex.IsListExpression)
+            {
+                // { page, 373, 150, 2190, 3119, "Page text"}
+                ListExpression listExp = new ListExpression(ex);
+                for (int i = 0; i < listExp.Length; i++)
+                {
+                    Expression expi = listExp.GetNthElement(i);
+                    if (expi.IsStringExpression)
+                    {
+                        var x = new StringExpression(expi);
+                        string xxx = x.Value;
+                    }
+                    else if (expi.IsSymbol)
+                    {
+                        var x = new Symbol(expi);
+                    }
+                    else if (expi.IsIntExpression)
+                    {
+                        var x = new IntExpression(expi);
+                    }
+                    else if (expi.IsListExpression)
+                    {
+                        ListExpression listExp2 = new ListExpression(expi);
+                        for (int j = 0; j < listExp2.Length; j++)
+                        {
+                            Expression expj = listExp.GetNthElement(j);
+                            if (expi.IsStringExpression)
+                            {
+                                var x = new StringExpression(expj);
+                                string xxx = x.Value;
+                            }
+                            else if (expj.IsSymbol)
+                            {
+                                var x = new Symbol(expj);
+                            }
+                            else if (expj.IsIntExpression)
+                            {
+                                var x = new IntExpression(expj);
+                            }
+                            else if (expi.IsListExpression)
+                            {
+
+                            }
+                        }
+                    }
+                }
+
+            }
+           
+            return "";
         }
 
+
+        private void DebugDump(StringBuilder sb, Expression exp, int indent)
+        {
+            if (exp.IsSymbol)
+            {
+                var x = new Symbol(exp);
+                sb.Append(x.Name);
+                sb.Append(' ');
+            }
+            else if (exp.IsIntExpression)
+            {
+                var x = new IntExpression(exp);
+                sb.Append(x.Value);
+                sb.Append(' ');
+            }
+            else if (exp.IsFloatExpression)
+            {
+                var x = new FloatExpression(exp);
+                sb.Append(x.Value);
+                sb.Append(' ');
+            }
+            else if (exp.IsStringExpression)
+            {
+                var x = new StringExpression(exp);
+                sb.Append("\"");
+                sb.Append(x.Value);
+                sb.Append("\"");
+            }
+            else if (exp.IsListExpression)
+            {
+                indent += 2;
+                sb.Append('\n');
+                sb.Append(' ', indent);
+                sb.Append('(');
+                ListExpression listExp = new ListExpression(exp);
+                for (int j = 0; j < listExp.Length; j++)
+                {
+                    Expression expj = listExp.GetNthElement(j);
+                    DebugDump(sb, expj, indent);
+                }
+                sb.Append(')');
+                indent -= 2;
+            }
+        }
 
         /// <summary>
         /// This function tries to obtain the annotations for this page.

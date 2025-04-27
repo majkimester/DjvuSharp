@@ -20,7 +20,6 @@
 using System;
 using DjvuSharp.Enums;
 using DjvuSharp.Rendering;
-using System.Linq;
 using DjvuSharp.Interop;
 
 namespace DjvuSharp

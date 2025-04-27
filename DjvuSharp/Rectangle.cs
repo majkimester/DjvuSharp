@@ -18,8 +18,6 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Runtime.InteropServices;
 
 namespace DjvuSharp
@@ -32,8 +30,8 @@ namespace DjvuSharp
     /// corner of the rectangle Members <see cref="Width"/> and <see cref="Height"/> indicate the
     /// width and height of the rectangle.
     /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
-    public class Rectangle
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct Rectangle
     {
         internal int X;
         internal int Y;
