@@ -18,6 +18,7 @@
 */
 
 using System;
+using System.Runtime.InteropServices;
 using DjvuSharp.Interop;
 
 namespace DjvuSharp.Rendering
@@ -55,23 +56,32 @@ namespace DjvuSharp.Rendering
                 rowSize = renderRect.Width * 3;
             }
 
-            byte[] imageBuffer = new byte[rowSize * renderRect.Height];  
-
-            unsafe
+            byte[] imageBuffer = new byte[rowSize * renderRect.Height];
+            var handle = GCHandle.Alloc(imageBuffer, GCHandleType.Pinned);
+            try
             {
-                fixed (byte* p = imageBuffer)
+                IntPtr ptr = handle.AddrOfPinnedObject();
+
+                int success = Native.ddjvu_page_render(
+                    page.NativePagePtr,
+                    mode,
+                    ref pageRect,
+                    ref renderRect,
+                    _djvu_format,
+                    rowSize,
+                    ptr);
+
+                if (success == 0)
                 {
-                    IntPtr ptr = (IntPtr)p;
-                    int success = Native.ddjvu_page_render(page.NativePagePtr, mode, ref pageRect, ref renderRect, _djvu_format, rowSize, ptr);
-
-                    if (success == 0)
-                    {
-                        throw new ApplicationException($"Failed to render page. Page no.: {page.PageNumber}");
-                    }
-
-                    return imageBuffer;
+                    throw new ApplicationException($"Failed to render page. Page no.: {page.PageNumber}");
                 }
             }
+            finally
+            {
+                handle.Free(); // Only unpins, array is still valid
+            }
+
+            return imageBuffer;
         }
 
         public byte[] RenderPageThumbnail(Thumbnail thumbnail, ref int width, ref int height)
@@ -92,22 +102,30 @@ namespace DjvuSharp.Rendering
             }
 
             byte[] imageBuffer = new byte[rowSize * height];
-
-            unsafe
+            var handle = GCHandle.Alloc(imageBuffer, GCHandleType.Pinned);
+            try
             {
-                fixed (byte* p = imageBuffer)
+                IntPtr ptr = handle.AddrOfPinnedObject();
+
+                int success = Native.ddjvu_thumbnail_render(
+                    thumbnail.Document.Document,
+                    thumbnail.PageNo,
+                    ref width,
+                    ref height,
+                    _djvu_format,
+                    rowSize,
+                    ptr);
+
+                if (success == 0)
                 {
-                    IntPtr ptr = (IntPtr)p;
-                    int success = Native.ddjvu_thumbnail_render(thumbnail.Document.Document, thumbnail.PageNo, ref width, ref height,
-                        _djvu_format, rowSize, ptr);
-
-                    if (success == 0)
-                    {
-                        throw new ApplicationException($"Failed to render thumbnail. Page no.: {thumbnail.PageNo}");
-                    }
-
-                    return imageBuffer;
+                    throw new ApplicationException($"Failed to render thumbnail. Page no.: {thumbnail.PageNo}");
                 }
+
+                return imageBuffer;
+            }
+            finally
+            {
+                handle.Free(); // Important to unpin after native call
             }
         }
 

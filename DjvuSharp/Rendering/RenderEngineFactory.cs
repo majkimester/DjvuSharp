@@ -18,6 +18,7 @@
 */
 
 using System;
+using System.Runtime.InteropServices;
 using DjvuSharp.Interop;
 
 namespace DjvuSharp.Rendering
@@ -59,11 +60,17 @@ namespace DjvuSharp.Rendering
                 numArgs = mask.Length;
             }
 
-            IntPtr format = IntPtr.Zero;
-
-            if (mask is null)
+            GCHandle? handle = null;
+            try
             {
-                format = Native.ddjvu_format_create(style, numArgs, IntPtr.Zero);
+                IntPtr ptrToMask = IntPtr.Zero;
+                if (mask != null)
+                {
+                    handle = GCHandle.Alloc(mask, GCHandleType.Pinned);
+                    ptrToMask = handle.Value.AddrOfPinnedObject();
+                }
+
+                IntPtr format = Native.ddjvu_format_create(style, numArgs, ptrToMask);
 
                 if (format == IntPtr.Zero)
                 {
@@ -72,22 +79,11 @@ namespace DjvuSharp.Rendering
 
                 return new RenderEngine(format, style);
             }
-            else
+            finally
             {
-                unsafe
+                if (handle.HasValue)
                 {
-                    fixed (int* ptr = mask)
-                    {
-                        IntPtr ptrToMask = (IntPtr)ptr;
-                        format = Native.ddjvu_format_create(style, numArgs, ptrToMask);
-
-                        if (format == IntPtr.Zero)
-                        {
-                            throw new ApplicationException($"Failed to create the render engine.");
-                        }
-
-                        return new RenderEngine(format, style);
-                    }
+                    handle.Value.Free();
                 }
             }
         }
