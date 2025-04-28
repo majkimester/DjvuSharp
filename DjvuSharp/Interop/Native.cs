@@ -1019,21 +1019,6 @@ namespace DjvuSharp.Interop
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(CustomStringMarshaler))] string maxDetails);
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="document"></param>
-        /// <returns></returns>
-        /// 
-        /*
-        [DllImport(dllname, CallingConvention = CallingConvention.Cdecl)]
-        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(CustomStringMarshaler))]
-        internal static extern string ddjvu_document_get_pagetext_utf8(
-            IntPtr document,
-            int pageNo,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(CustomStringMarshaler))] string maxDetails);
-        */
-
-        /// <summary>
         /// This function tries to obtain the annotations for
         /// page pageno.If this information is available, it
         /// returns a s-expression with the same syntax as function
